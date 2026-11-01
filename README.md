@@ -19,7 +19,10 @@ this is a 3 layer neural network in just 6 lines of code!!!! (I've always wanted
 
 ```
 import numpy as np
-from scalar import bp, net
+import gb_net_lib
+
+bp = gb_net_lib.bp
+net = gb_net_lib.net
 
 # 1. Make some dummy data (4 samples, each with 2 inputs, predicting 1 output)
 X = [[0.1, 0.2], [0.4, 0.5], [0.7, 0.8], [0.9, 0.1]]
@@ -44,9 +47,13 @@ The whole library is split into two main classes:
 
 ### 1. The bp class (autograd engine)
 
-Whenever you do math with bp objects, the library builds a family tree (parent list) behind the scenes so it knows how to walk backward and find the derivatives later.from scalar import bp
+Whenever you do math with bp objects, the library builds a family tree (parent list) behind the scenes so it knows how to walk backward and find the derivatives later.
+
+```python
+import gb_net_lib
 import numpy as np
-```
+
+bp = gb_net_lib.bp
 a = bp([[1.0, 2.0], [3.0, 4.0]])
 b = bp([[0.5], [1.5]])
 ```
@@ -98,7 +105,10 @@ Once `.train()` finishes, it hands you back the trained weights (`struc`). Here'
 
 ```python
 import numpy as np
-from scalar import bp, net
+import gb_net_lib
+
+bp = gb_net_lib.bp
+net = gb_net_lib.net
 
 # Training data: Simple logic gate style problem
 X = [

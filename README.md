@@ -17,7 +17,7 @@ If you've ever watched videos on neural nets and deep learning libraries but nev
 
 this is a 3 layer neural network in just 6 lines of code!!!! (I've always wanted to do this. this part looks really cool)
 
-```
+```python
 import numpy as np
 import gb_net_lib
 

@@ -171,6 +171,34 @@ probs = classifier.feed(trained_weights)[-1]
 print("Class probabilities:", probs.data.flatten())
 ```
 
+## Experiments & Technical Reports
+
+To verify that `gb-net` actually gets the math right under the hood—and to see how gradients behave in deeper networks—this repository includes two lightweight CPU-only experiments (each running in under a fraction of a second with NumPy `float64`) along with two standalone technical reports.
+
+### Repository Layout
+* `/EXPERIMENTS/`: Experiment blueprints (`expo.md`), specifications (`protocol.md`), and runner scripts inside `exp1_numerical_verification/` and `exp2_depth_propagation/`.
+* `/RESULTS/`: Raw CSV data tables and generated `matplotlib` figures (`exp1/` and `exp2/`).
+* `/REPORTS/`: Compiled PDF technical reports and companion source files (`report1_numerical_verification/` and `report2_depth_propagation/`).
+
+### Experiment 1 — Numerical Verification & Repeated `backprop()` Graph Analysis
+* **Report:** *Numerical Verification of a Lightweight Reverse-Mode Automatic Differentiation Engine* (`/REPORTS/report1_numerical_verification/`)
+* **What it tests:**
+  * **Part 1A (Analytical vs. Numerical Differentiation):** Checks every primitive operation (`+`, `-`, `*`, `sq`, `sg`, `relu`, `softmax`, `cel`) and a composite 2-layer MLP ($3 \to 4 \to 3$, 34 scalar parameters) against Central Finite Differences (CFD) across step sizes $h \in \{10^{-2}, 10^{-4}, 10^{-6}, 10^{-8}, 10^{-10}\}$.
+  * **Part 1B (Calling `.backprop()` Twice on the Same Graph):** Investigates what happens when `.backprop()` is called $k \in \{1, 2, 3\}$ times on the exact same computational graph without clearing intermediate node gradients.
+* **Key Findings:**
+  * At $h = 10^{-6}$, analytical gradients match CFD with maximum absolute errors $\le 1.89 \times 10^{-10}$ and relative errors $\le 1.31 \times 10^{-9}$, with the step-size sweep forming the textbook U-shaped error curve (minimum error at $h = 10^{-4}$, rising due to roundoff from $h \le 10^{-6}$).
+  * Calling `backprop()` multiple times on a reused graph does **not** just double gradients—because intermediate nodes keep their stale gradients and pass them backward again, a node at topological depth $d$ scales by $\binom{k+d-1}{d}$ (so on pass $k=2$, gradients scale by $d+1$, reaching **$8\times$** at depth 7, and **$36\times$** on pass $k=3$). Zeroing every node's `.grad` in `topo` before seeding the root restores idempotency ($1.00\times$).
+
+### Experiment 2 — Gradient Propagation Through Networks of Varying Depths
+* **Report:** *Empirical Analysis of Gradient Propagation Dynamics Across Varying Network Depths in GB-Net* (`/REPORTS/report2_depth_propagation/`)
+* **What it tests:**
+  * Measures single-pass gradient flow at initialization across network depths $L \in \{2, 5, 10, 15, 20\}$ (constant width $N = H = 8$, averaged across seeds `{0, 1, 42}`) for three regimes: **Sigmoid** (`act='sg'`), **Default ReLU** (`act='relu'` with $\mathcal{U}(-0.5, 0.5)$ init), and **He-Initialized ReLU** ($\mathcal{U}(-\sqrt{6/8}, \sqrt{6/8})$ with zeroed biases).
+  * Tracks layer-wise weight gradient norms ($G_W^{(\ell)}$), bias gradient norms ($G_b^{(\ell)}$), ReLU active-neuron fraction ($\text{ANF}^{(\ell)}$), end-to-end attenuation ratio ($\rho_L = G_W^{(1)} / (G_W^{(L)} + 10^{-30})$), and per-layer log-decay ($\alpha_L$).
+* **Key Findings:**
+  * **Sigmoid vanishes severely:** Because $\sigma'(z) \le 0.25$, gradients decay by roughly **$-0.74\text{ dex/layer}$** ($\rho_{20} = 8.23 \times 10^{-15}$ at $L = 20$), leaving early layers effectively frozen.
+  * **Default ReLU decays slower but still contracts:** Under `gb_net_lib`'s default $\mathcal{U}(-0.5, 0.5)$ initialization ($\text{std} \approx 0.289$ vs. He's $0.500$ for width 8), ReLU decays at **$-0.28\text{ dex/layer}$** ($\rho_{20} = 6.48 \times 10^{-6}$).
+  * **He-initialized ReLU preserves gradient scale:** Rescaling weights to the variance-preserving He distribution eliminates vanishing gradients across all 20 layers ($\rho_{20} \approx 1.25$, $\alpha_{20} = +0.004 \pm 0.008\text{ dex/layer}$).
+
 ### Notes & Quirks to Keep in Mind
 
 1. **Biases Are Built-In Now**: Every layer now computes $(W \cdot x) + b$ automatically! The weight matrices are returned by `layer_init()` / `train()`, and the matching bias column vectors live inside `model.biases`.
@@ -179,4 +207,9 @@ print("Class probabilities:", probs.data.flatten())
    * If you use `act='sg'`, your network outputs numbers between $0$ and $1$.
    * If you use `act='softmax'`, hidden layers use `relu` while the final layer outputs probabilities that sum to $1.0$.
 3. **Column Vectors Rule Everything**: Internally, `net` expects inputs and biases to be column vectors of shape $(N, 1)$. `.train()` reshapes your lists automatically, but if you call `.feed()` manually, remember to `.reshape(-1, 1)` your input array.
-4. **Reusing a Computation Graph**: Calling `.backprop()` resets the root loss node's gradient to `1`, but does not automatically zero out intermediate nodes in the graph—so if you call `.backprop()` twice on the exact same forward pass without zeroing gradients, intermediate gradients will stack!
+4. **Reusing a Computation Graph**: Calling `.backprop()` resets the root loss node's gradient to `1`, but does not automatically zero out intermediate nodes in the graph—so if you call `.backprop()` twice on the exact same forward pass without zeroing gradients, intermediate gradients will compound by $d + 1$ at depth $d$ (as proven in Experiment 1)!
+
+## Citation
+
+* **Experiment 1:** Gogoi, A. (2026). *Numerical Verification of a Lightweight Reverse-Mode Automatic Differentiation Engine*. Zenodo. https://doi.org/10.5281/zenodo.24471739
+* **Experiment 2:** Gogoi, A. (2026). *Empirical Analysis of Gradient Propagation Dynamics Across Varying Network Depths in GB-Net*. Zenodo. https://doi.org/10.5281/zenodo.<REPORT_2_ID>

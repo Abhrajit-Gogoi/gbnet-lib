@@ -115,10 +115,10 @@ th3 = [binom(3 + d - 1, d) for d in depths]
 
 plt.rcParams["font.family"] = "serif"
 fig, ax = plt.subplots(figsize=(6, 4))
-ax.plot(depths, m2, "o-", color="#1f77b4", label="M_{2,d} (empirical)")
-ax.plot(depths, th2, "s--", color="#d62728", label="binom(d+1,d)=d+1 (theory)")
-ax.plot(depths, m3, "o-", color="#2ca02c", label="M_{3,d} (empirical)")
-ax.plot(depths, th3, "s--", color="#9467bd", label="binom(d+2,d) (theory)")
+ax.plot(depths, m2, "o-", color="#1f77b4", label=r"$M_{2,d}$ (empirical)")
+ax.plot(depths, th2, "s--", color="#d62728", label=r"$\binom{d+1}{d} = d+1$ (theory)")
+ax.plot(depths, m3, "o-", color="#2ca02c", label=r"$M_{3,d}$ (empirical)")
+ax.plot(depths, th3, "s--", color="#9467bd", label=r"$\binom{d+2}{d}$ (theory)")
 ax.set_xlabel(r"Topological depth $d$ (edges from loss)")
 ax.set_ylabel(r"Amplification factor $M_{k,d}$")
 ax.set_xticks(depths)

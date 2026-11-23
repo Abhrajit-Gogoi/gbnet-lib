@@ -7,13 +7,13 @@ Reverse-mode autograd (`bp`) engine and multi-layer perceptron (`net`) module
 
 ## Abstract
 
-We empirically evaluate the numerical correctness and state-management behaviour of `gb_net_lib`, a lightweight NumPy-based reverse-mode automatic differentiation (autograd) engine. Part 1A compares analytical gradients produced by `bp.backprop()` against central finite-difference (CFD) oracles across all eight primitive operations (addition, subtraction, matrix multiplication, squaring, sigmoid, ReLU, softmax, cross-entropy) and a composite 2-layer MLP ($3 \to 4 \to 3$) over step sizes $h \in \{10^{-2}, 10^{-4}, 10^{-6}, 10^{-8}, 10^{-10}\}$. At $h = 10^{-6}$, maximum absolute errors are $\le 1.89 \times 10^{-10}$ and relative errors $\le 1.31 \times 10^{-9}$ across all tensors, confirming the $\mathcal{O}(h^2)$ truncation / $\mathcal{O}(\epsilon_{\rm mach}/h)$ roundoff trade-off of CFD. Part 1B measures stale-gradient amplification under repeated `backprop()` calls on a static graph: with only the root node's gradient reset, the amplification factor at topological depth $d$ equals $\binom{k+d-1}{d}$ exactly ($k=2 \Rightarrow d+1$, e.g. $\times 8$ at depth 7 for $k=2$; $\times 36$ for $k=3$). Zeroing all topological gradients before each pass restores idempotency ($M_{k,d} = 1.00$). We trace the root cause to `bp.backprop()` resetting only the root gradient and recommend clearing every node's `.grad` prior to each backward pass.
+We empirically evaluate the numerical correctness and state-management behavior of `gb_net_lib`, a lightweight NumPy-based reverse-mode automatic differentiation (autograd) engine. Part 1A compares analytical gradients produced by `bp.backprop()` against central finite-difference (CFD) oracles across all eight primitive operations (addition, subtraction, matrix multiplication, squaring, sigmoid, ReLU, softmax, cross-entropy) and a composite 2-layer MLP ($3 \to 4 \to 3$) over step sizes $h \in \{10^{-2}, 10^{-4}, 10^{-6}, 10^{-8}, 10^{-10}\}$. At $h = 10^{-6}$, maximum absolute errors are $\le 1.89 \times 10^{-10}$ and relative errors $\le 1.31 \times 10^{-9}$ across all tensors, confirming the $\mathcal{O}(h^2)$ truncation / $\mathcal{O}(\epsilon_{\rm mach}/h)$ roundoff trade-off of CFD. Part 1B measures stale-gradient amplification under repeated `backprop()` calls on a static graph: with only the root node's gradient reset, the amplification factor at topological depth $d$ equals $\binom{k+d-1}{d}$ exactly ($k=2 \Rightarrow d+1$, e.g. $\times 8$ at depth 7 for $k=2$; $\times 36$ for $k=3$). Zeroing all topological gradients before each pass restores idempotency ($M_{k,d} = 1.00$). We trace the root cause to `bp.backprop()` resetting only the root gradient and recommend clearing every node's `.grad` prior to each backward pass.
 
 ---
 
 ## 1. Introduction & Architectural Overview
 
-GB-Net is a minimal autograd and MLP library built from scratch with NumPy (`float64`). It comprises two classes. The `bp` class wraps a NumPy array and constructs a dynamic directed acyclic graph (DAG) on the fly: every arithmetic operation records its operands in a `parent` list and stores a `back()` closure implementing the corresponding vector-Jacobian product (VJP). The `backprop()` method performs a post-order depth-first topological sort (`build_topo`) and executes each node's `back()` in reverse topological order, starting from the root node whose gradient is seeded to one ($\partial \mathcal{L}/\partial \mathcal{L} = 1$). The `net` class builds an MLP using column-vector layout ($W^{(\ell)} \in \mathbb{R}^{n_\ell \times n_{\ell-1}}$, $b^{(\ell)} \in \mathbb{R}^{n_\ell \times 1}$), with `feed()` running the forward pass and `train()` running single-sample stochastic gradient descent.
+GB-Net is a minimal autograd and MLP library built from scratch with NumPy (`float64`). It comprises two classes. The `bp` class wraps a NumPy array and constructs a dynamic directed acyclic graph (DAG) on the fly: every arithmetic operation records its operands in a `parent` list and stores a `back()` closure implementing the corresponding vector-Jacobian product (VJP). The `backprop()` method performs a post-order depth-first topological sort (`build_topo`) and executes each node's `back()` in reverse topological order, starting from the root node whose gradient vector is seeded to ones ($\partial\mathcal{L}/\partial\boldsymbol{\ell} = \mathbf{1}$, where $\boldsymbol{\ell}$ is the vector of per-component losses and $\mathcal{L}=\sum_i \ell_i$). The `net` class builds an MLP using column-vector layout ($W^{(\ell)} \in \mathbb{R}^{n_\ell \times n_{\ell-1}}$, $b^{(\ell)} \in \mathbb{R}^{n_\ell \times 1}$), with `feed()` running the forward pass and `train()` running single-sample stochastic gradient descent.
 
 A key state-management property, noted in the library documentation, is that `backprop()` resets **only the root node's** gradient; intermediate node gradients are never cleared. Consequently, repeated calls on the same static graph accumulate stale gradients. `net.train()` avoids this in practice because `feed()` builds fresh intermediate `bp` objects each iteration and the loop manually zeroes weight and bias gradients after every sample. Experiment 1 quantifies both the numerical accuracy of the VJP rules (Part 1A) and the stale-gradient amplification (Part 1B).
 
@@ -31,8 +31,8 @@ For a node computing $o = f(\ldots)$ with upstream gradient $\bar{o} = \partial 
 - **Squaring** ($o = a^2$): $\bar{a} \mathrel{+}= 2a \odot \bar{o}$.
 - **Sigmoid** ($o = \sigma(a)$, $\sigma(x) = (1+e^{-x})^{-1}$): $\bar{a} \mathrel{+}= o \odot (1 - o) \odot \bar{o}$.
 - **ReLU** ($o = \max(a, 0)$): $\bar{a} \mathrel{+}= \mathbb{I}(o > 0) \odot \bar{o}$.
-- **Softmax** ($o_i = e^{a_i}/\sum_j e^{a_j}$): $\bar{a} \mathrel{+}= o \odot (\bar{o} - \sum_k o_k \bar{o}_k)$.
-- **Cross-entropy** ($\mathcal{L} = -\sum_i y_i \log p_i$, $p = \text{clip}(a, 10^{-15}, 1)$): $\bar{a} \mathrel{+}= -(y/p) \odot \bar{o}$.
+- **Softmax** ($o_i = e^{a_i - \max(a)} / \sum_j e^{a_j - \max(a)}$): $\bar{a} \mathrel{+}= o \odot (\bar{o} - \sum_k o_k \bar{o}_k)$.
+- **Cross-entropy** ($\ell_i = -y_i \ln(\tilde p_i)$, $\tilde p_i = \operatorname{clip}(p_i, 10^{-15}, 1.0)$): $\bar p \mathrel{+}= -(y \oslash \tilde p) \odot \bar{\boldsymbol{\ell}}$, where $\bar{\boldsymbol{\ell}} = \partial\mathcal{L}/\partial\boldsymbol{\ell} = \mathbf{1}$ is the seeded upstream gradient for the scalar loss $\mathcal{L} = \sum_i \ell_i$, $\oslash$ denotes element-wise division, and the target $y$ is held constant during parameter updates (no gradient flows into $y$).
 
 ### 2.2 Central finite-difference oracle and its error regimes
 
@@ -44,9 +44,15 @@ By Taylor expansion, the truncation error is $\mathcal{O}(h^2)$, while floating-
 
 ### 2.3 Stale-gradient recurrence
 
-Let $g_d^{(k)}$ denote the gradient norm at topological depth $d$ after $k$ `backprop()` passes on a static graph, with only the root reset between passes. Because each intermediate node retains its gradient from pass $k-1$ and feeds that inflated value into its parents during pass $k$, the amplification satisfies
+Let $g_d^{(k)}$ denote the gradient **tensor** at topological depth $d$ after $k$ `backprop()` passes on a static graph, with only the root reset between passes. Let $J_d$ be the local Jacobian mapping the gradient from depth $d-1$ to depth $d$. Because each intermediate node retains its gradient from pass $k-1$ and feeds that inflated value into its parents during pass $k$, the gradient tensors satisfy the recurrence
 $$
-M_{k,d} = \frac{g_d^{(k)}}{g_d^{(1)}} = \binom{k+d-1}{d}.
+g_d^{(k)} = g_d^{(k-1)} + J_d\, g_{d-1}^{(k)},
+\qquad
+g_0^{(k)} = \mathbf{1}.
+$$
+Since every term in the expansion is a positive scalar multiple of $g_d^{(1)}$, the norm amplification ratio is
+$$
+M_{k,d} = \frac{\|g_d^{(k)}\|_2}{\|g_d^{(1)}\|_2} = \binom{k+d-1}{d}.
 $$
 For $k=2$, $M_{2,d} = d+1$; for $k=3$, $M_{3,d} = (d+1)(d+2)/2$.
 
@@ -70,34 +76,45 @@ Metrics: maximum absolute error $\varepsilon_{\max}$, relative Euclidean error $
 
 ### 4.1 Part 1A: Primitive-operator and MLP verification
 
-Table 1 reports CFD-vs-AD errors at $h = 10^{-6}$. All eight primitives agree with CFD to machine precision ($\varepsilon_{\max} = 0$, cosine similarity $\approx 1$), and the composite MLP tensors match the reference baseline: $b^{(2)}$ ($\varepsilon_{\max} = 1.696 \times 10^{-10}$), $b^{(1)}$ ($8.727 \times 10^{-11}$), $W^{(1)}$ ($1.681 \times 10^{-10}$), and $x$ ($3.352 \times 10^{-11}$), all well below the $10^{-9}$ acceptance threshold.
+Table 1 reports CFD-vs-AD errors for all eight primitive operators at $h = 10^{-6}$. All operators achieve $\varepsilon_{\max} \le 1.11\times10^{-10}$ and cosine similarity $S_{\cos}\ge 0.9999999999999$ (except softmax, discussed below). The composite MLP tensors match the reference baseline: $b^{(2)}$ ($\varepsilon_{\max} = 1.696 \times 10^{-10}$), $b^{(1)}$ ($8.727 \times 10^{-11}$), $W^{(1)}$ ($1.681 \times 10^{-10}$), and $x$ ($3.352 \times 10^{-11}$), all well below the $10^{-9}$ acceptance threshold. The softmax row's elevated relative error and degraded cosine similarity arise because the test loss $\mathcal{L} = \sum_i p_i = 1$ is constant, so its true gradient is identically zero; any nonzero CFD value is pure roundoff noise.
 
-Table 2 shows the step-size sweep. Errors fall from $\sim 10^{-6}$ at $h = 10^{-2}$ to a minimum near $h = 10^{-6}$–$10^{-8}$, then rise again at $h = 10^{-10}$ ($\sim 10^{-6}$) due to roundoff — the classic U-shaped CFD curve illustrated in Figure 1. Relative error bottoms out around $10^{-10}$ at $h = 10^{-6}$.
+| Operator | $\varepsilon_{\max}$ | $\varepsilon_{\rm rel}$ | $1-S_{\cos}$ |
+|---|---:|---:|---:|
+| Addition (`+`) | $0$ | $0$ | $0$ |
+| Subtraction (`-`) | $0$ | $0$ | $0$ |
+| Matmul (`*`) | $0$ | $0$ | $0$ |
+| Squaring (`sq`) | $0$ | $0$ | $0$ |
+| Sigmoid (`sg`) | $0$ | $0$ | $5.551\times10^{-17}$ |
+| ReLU (`relu`) | $0$ | $0$ | $1.110\times10^{-16}$ |
+| Softmax (`softmax`) | $1.110\times10^{-10}$ | $1.000\times10^{0}$ | $1.000\times10^{0}$ |
+| Cross-entropy (`cel`) | $0$ | $0$ | $0$ |
 
-| Tensor | Depth | $\varepsilon_{\max}$ ($h=10^{-6}$) | $\varepsilon_{\rm rel}$ | Theory row |
-|---|---|---:|---:|---|
-| $b^{(2)}$ | 3 | $1.696 \times 10^{-10}$ | $1.061 \times 10^{-10}$ | expo.md §1.3 |
-| $W^{(2)}$ | 4 | $1.885 \times 10^{-10}$ | $1.584 \times 10^{-10}$ | expo.md §1.3 |
-| $b^{(1)}$ | 6 | $8.727 \times 10^{-11}$ | $6.888 \times 10^{-10}$ | expo.md §1.3 |
-| $W^{(1)}$ | 7 | $1.681 \times 10^{-10}$ | $1.304 \times 10^{-9}$ | expo.md §1.3 |
-| $x$ | 7 | $3.352 \times 10^{-11}$ | $3.264 \times 10^{-10}$ | expo.md §1.3 |
+Table 2 shows the step-size sweep for the composite MLP. The empirical error minimum occurs at $h = 10^{-4}$ (relative errors from $3.00\times10^{-11}$ to $3.51\times10^{-10}$ across tensors), roundoff error already rises at $h = 10^{-6}$ and $h = 10^{-8}$, and reaches $1.57\times10^{-5}$ at $h = 10^{-10}$ — the classic U-shaped CFD curve illustrated in Figure 1. Relative error bottoms out around $10^{-10}$ at $h = 10^{-4}$, not $10^{-6}$.
 
-Figure 1 (Figure `fig1_cfd_v_curve`) plots $\log_{10}(\varepsilon_{\rm rel})$ vs. $\log_{10}(h)$, confirming the $\mathcal{O}(h^2)$ regime at large $h$ and roundoff dominance at $h < 10^{-7}$.
+| $h$ | $W^{(1)}$ | $b^{(1)}$ | $W^{(2)}$ | $b^{(2)}$ | $x$ |
+|---|---:|---:|---:|---:|---:|
+| $10^{-2}$ | $1.93\times10^{-6}$ | $3.52\times10^{-6}$ | $2.99\times10^{-7}$ | $1.04\times10^{-6}$ | $4.93\times10^{-7}$ |
+| $10^{-4}$ | $1.90\times10^{-10}$ | $3.51\times10^{-10}$ | $3.00\times10^{-11}$ | $1.04\times10^{-10}$ | $5.55\times10^{-11}$ |
+| $10^{-6}$ | $1.30\times10^{-9}$ | $6.89\times10^{-10}$ | $1.58\times10^{-10}$ | $1.06\times10^{-10}$ | $3.26\times10^{-10}$ |
+| $10^{-8}$ | $1.08\times10^{-7}$ | $1.15\times10^{-7}$ | $1.72\times10^{-8}$ | $1.00\times10^{-8}$ | $8.09\times10^{-8}$ |
+| $10^{-10}$ | $1.57\times10^{-5}$ | $9.41\times10^{-6}$ | $1.87\times10^{-6}$ | $6.31\times10^{-7}$ | $7.97\times10^{-6}$ |
+
+Figure 1 (Figure `fig1_cfd_v_curve`) plots $\max_\text{tensors}\log_{10}(\varepsilon_{\rm rel})$ vs. $\log_{10}(h)$, confirming the $\mathcal{O}(h^2)$ regime at large $h$ and roundoff rising from $h \le 10^{-6}$.
 
 ### 4.2 Part 1B: Stale-gradient amplification
 
-Table 3 and Figure 2 (`fig2_double_backprop_scaling`) show that repeated `backprop()` on a static graph amplifies gradients exactly as $\binom{k+d-1}{d}$. For $k=2$, the factor is $d+1$ at every depth ($\times 1$ at loss, $\times 2$ at probs, $\times 3$ at $a_2$, $\times 4$ at $z_2/B_2$, $\times 5$ at $W_2/a_1$, $\times 6$ at $z_1$, $\times 7$ at $B_1$, $\times 8$ at $W_1/x$). For $k=3$, the factors are $1, 3, 6, 10, 15, 21, 28, 36$, matching $\binom{d+2}{d}$ exactly. All empirical ratios agree with theory to within $10^{-14}$.
+Table 3 and Figure 2 (`fig2_double_backprop_scaling`) show that repeated `backprop()` on a static graph amplifies gradients exactly as $\binom{k+d-1}{d}$. For $k=2$, the factor is $d+1$ at every depth ($\times 1$ at loss, $\times 2$ at probs, $\times 3$ at $a_2$, $\times 4$ at $z_2/b^{(2)}$, $\times 5$ at $W^{(2)}/h_1$, $\times 6$ at $a_1$, $\times 7$ at $z_1/b^{(1)}$, $\times 8$ at $W^{(1)}/x$). For $k=3$, the factors are $1, 3, 6, 10, 15, 21, 28, 36$, matching $\binom{d+2}{d}$ exactly. All empirical ratios agree with theory to within $10^{-14}$.
 
 | Depth $d$ | Node | $M_{2,d}$ (emp.) | $M_{2,d}$ (theory) | $M_{3,d}$ (emp.) | $M_{3,d}$ (theory) |
 |---:|---|---:|---:|---:|---:|
 | 0 | loss | 1 | 1 | 1 | 1 |
 | 1 | probs | 2 | 2 | 3 | 3 |
 | 2 | $a_2$ | 3 | 3 | 6 | 6 |
-| 3 | $z_2 / B_2$ | 4 | 4 | 10 | 10 |
-| 4 | $W_2 / a_1$ | 5 | 5 | 15 | 15 |
-| 5 | $z_1$ | 6 | 6 | 21 | 21 |
-| 6 | $B_1$ | 7 | 7 | 28 | 28 |
-| 7 | $W_1 / x$ | 8 | 8 | 36 | 36 |
+| 3 | $z_2 / b^{(2)}$ | 4 | 4 | 10 | 10 |
+| 4 | $W^{(2)} / h_1$ | 5 | 5 | 15 | 15 |
+| 5 | $a_1$ | 6 | 6 | 21 | 21 |
+| 6 | $z_1 / b^{(1)}$ | 7 | 7 | 28 | 28 |
+| 7 | $W^{(1)} / x$ | 8 | 8 | 36 | 36 |
 
 Clearing every topological node's `.grad` before each pass reduces $M_{k,d}$ to $1.00$ for all $k, d$, confirming idempotency.
 

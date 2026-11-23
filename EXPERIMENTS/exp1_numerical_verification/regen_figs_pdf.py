@@ -34,10 +34,10 @@ m3 = [lookup[(3, d)] for d in depths]
 th2 = [math.comb(d + 1, d) for d in depths]
 th3 = [math.comb(d + 2, d) for d in depths]
 fig, ax = plt.subplots(figsize=(6, 4))
-ax.plot(depths, m2, "o-", color="#1f77b4", label="M_{2,d} (empirical)")
-ax.plot(depths, th2, "s--", color="#d62728", label="binom(d+1,d)=d+1 (theory)")
-ax.plot(depths, m3, "o-", color="#2ca02c", label="M_{3,d} (empirical)")
-ax.plot(depths, th3, "s--", color="#9467bd", label="binom(d+2,d) (theory)")
+ax.plot(depths, m2, "o-", color="#1f77b4", label=r"$M_{2,d}$ (empirical)")
+ax.plot(depths, th2, "s--", color="#d62728", label=r"$\binom{d+1}{d} = d+1$ (theory)")
+ax.plot(depths, m3, "o-", color="#2ca02c", label=r"$M_{3,d}$ (empirical)")
+ax.plot(depths, th3, "s--", color="#9467bd", label=r"$\binom{d+2}{d}$ (theory)")
 ax.set_xlabel(r"Topological depth $d$ (edges from loss)")
 ax.set_ylabel(r"Amplification factor $M_{k,d}$")
 ax.set_xticks(depths); ax.grid(True, alpha=0.3); ax.legend()
@@ -50,14 +50,6 @@ rows = list(csv.DictReader(open("RESULTS/exp2/exp2_depth_grad_norms.csv")))
 regimes = ["sigmoid", "relu", "he_relu"]
 colors = {"sigmoid": "#1f77b4", "relu": "#d62728", "he_relu": "#2ca02c"}
 labels = {"sigmoid": "Sigmoid", "relu": "ReLU (default)", "he_relu": "ReLU (He init)"}
-# Panel A: log10(rho) vs L
-panelA = {rg: [] for rg in regimes}
-for rg in regimes:
-    for L in [2, 5, 10, 15, 20]:
-        rhos = [float(r["G_W"]) / (float(r["G_W"]) + 1e-30) for r in rows if r["regime"] == rg and int(r["depth"]) == L and int(r["layer"]) == 1]
-        # rho needs G_W^(1) and G_W^(L) same seed; recompute properly below
-        panelA[rg].append(L)
-# proper rho per seed
 import collections
 seed_data = collections.defaultdict(dict)
 for r in rows:
@@ -67,22 +59,29 @@ def rho(rg, L, s):
     d = seed_data[(rg, L, s)]
     return d[1] / (d[L] + 1e-30)
 fig, (axA, axB) = plt.subplots(1, 2, figsize=(10, 4))
+fig.subplots_adjust(wspace=0.35)
+# Panel A: 3-seed mean log10(rho) vs L
 for rg in regimes:
     Ls = [2, 5, 10, 15, 20]
-    logrho = [math.log10(rho(rg, L, 42)) for L in Ls]
-    axA.plot(Ls, logrho, "o-", color=colors[rg], label=labels[rg])
+    logrho_mean = []
+    for L in Ls:
+        rhos = [rho(rg, L, s) for s in [0, 1, 42]]
+        logrho_mean.append(math.log10(sum(rhos) / len(rhos)))
+    axA.plot(Ls, logrho_mean, "o-", color=colors[rg], label=labels[rg])
+axA.set_title("Panel A: Attenuation vs. Depth (3-seed mean)")
 axA.set_xlabel("Network depth $L$")
-axA.set_ylabel(r"$\log_{10}(\rho_L)$")
-axA.set_xticks([2, 5, 10, 15, 20]); axA.grid(True, alpha=0.3); axA.legend()
+axA.set_ylabel(r"$\log_{10}(\rho_L) = \log_{10}(G_W^{(1)}/G_W^{(L)})$")
+axA.set_xticks([2, 5, 10, 15, 20]); axA.grid(True, alpha=0.3); axA.legend(fontsize=8)
 # Panel B: layer profile at L=20 seed 42
 for rg in regimes:
     d = seed_data[(rg, 20, 42)]
     layers = list(range(1, 21))
     axB.plot(layers, [math.log10(d[l]) if d[l] > 0 else -300.0 for l in layers],
              "o-", color=colors[rg], label=labels[rg], markersize=3)
+axB.set_title("Panel B: Layer-Wise Profile ($L=20$, seed 42)")
 axB.set_xlabel(r"Layer $\ell$")
 axB.set_ylabel(r"$\log_{10}\|\nabla_{W^{(\ell)}}\mathcal{L}\|_F$")
-axB.set_xticks([1, 5, 10, 15, 20]); axB.grid(True, alpha=0.3); axB.legend()
+axB.set_xticks([1, 5, 10, 15, 20]); axB.grid(True, alpha=0.3); axB.legend(fontsize=8)
 fig.suptitle("Gradient propagation across network depth ($N=H=8$)")
 fig.tight_layout(rect=[0, 0, 1, 0.94])
 fig.savefig("RESULTS/exp2/fig3_depth_decay_comparison.pdf", dpi=300, bbox_inches="tight")

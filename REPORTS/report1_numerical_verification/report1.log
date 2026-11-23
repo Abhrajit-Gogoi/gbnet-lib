@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.11.18)  18 NOV 2026 23:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.11.18)  23 NOV 2026 11:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -396,8 +396,7 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 10.
 (C:\Users\GB Arial\miktex\tex/latex/l3kernel\l3backend-pdftex.def
 File: l3backend-pdftex.def 2026-09-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count326
-)
-No file report1.aux.
+) (report1.aux)
 \openout1 = `report1.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
@@ -418,7 +417,7 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 18.
 LaTeX Font Info:    ... okay on input line 18.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 18.
 LaTeX Font Info:    ... okay on input line 18.
-(C:\Users\GB Arial\miktex\tex/context/base/mkii\supp-pdf.mkii
+ (C:\Users\GB Arial\miktex\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count327
 \scratchdimen=\dimen192
@@ -496,13 +495,14 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 )
 \c@lstlisting=\count333
 Package hyperref Info: Link coloring ON on input line 18.
+ (report1.out)
+(report1.out)
 \@outlinefile=\write3
 \openout3 = `report1.out'.
 
 LaTeX Font Info:    Trying to load font information for U+msa on input line 23.
 
-
-(C:\Users\GB Arial\miktex\tex/latex/amsfonts\umsa.fd
+ (C:\Users\GB Arial\miktex\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 (C:\Users\GB Arial\miktex\tex/latex/microtype\mt-msa.cfg
@@ -519,39 +519,60 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 ) [1
 
 {C:/Users/GB Arial/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2]
-
-LaTeX Warning: Reference `tab:operr' on page 3 undefined on input line 76.
-
-
-LaTeX Warning: Reference `tab:sweep' on page 3 undefined on input line 95.
-
-
-LaTeX Warning: Reference `fig:cfd' on page 3 undefined on input line 95.
-
-
-LaTeX Warning: File `RESULTS/exp1/fig1_cfd_v_curve.pdf' not found on input line
- 116.
-
-
-! Package pdftex.def Error: File `RESULTS/exp1/fig1_cfd_v_curve.pdf' not found:
- using draft setting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.116 ...width]{RESULTS/exp1/fig1_cfd_v_curve.pdf}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
- 
+<../../RESULTS/exp1/fig1_cfd_v_curve.pdf, id=76, 426.71419pt x 283.17558pt>
+File: ../../RESULTS/exp1/fig1_cfd_v_curve.pdf Graphic file (type pdf)
+<use ../../RESULTS/exp1/fig1_cfd_v_curve.pdf>
+Package pdftex.def Info: ../../RESULTS/exp1/fig1_cfd_v_curve.pdf  used on input
+ line 128.
+(pdftex.def)             Requested size: 271.7835pt x 180.36757pt.
+ [3]
+<../../RESULTS/exp1/fig2_double_backprop_scaling.pdf, id=86, 426.35161pt x 282.
+05376pt>
+File: ../../RESULTS/exp1/fig2_double_backprop_scaling.pdf Graphic file (type pd
+f)
+<use ../../RESULTS/exp1/fig2_double_backprop_scaling.pdf>
+Package pdftex.def Info: ../../RESULTS/exp1/fig2_double_backprop_scaling.pdf  u
+sed on input line 158.
+(pdftex.def)             Requested size: 271.7835pt x 179.79935pt.
+ [4 <../../RESULTS/exp1/fig1_cfd_v_curve.pdf> <../../RESULTS/exp1/fig2_double_b
+ackprop_scaling.pdf>] [5] (report1.aux)
+ ***********
+LaTeX2e <2026-11-01>
+L3 programming layer <2026-09-09>
+ ***********
+Package rerunfilecheck Info: File `report1.out' has not changed.
+(rerunfilecheck)             Checksum: EB7A97EF2769A07182F4E7A24243D506;2276.
+ ) 
 Here is how much of TeX's memory you used:
- 14365 strings out of 469245
- 220576 string characters out of 5455597
- 698587 words of memory out of 5000000
- 43307 multiletter control sequences out of 15000+600000
- 640200 words of font info for 123 fonts, out of 8000000 for 9000
+ 14446 strings out of 469245
+ 221317 string characters out of 5455597
+ 700167 words of memory out of 5000000
+ 43330 multiletter control sequences out of 15000+600000
+ 643942 words of font info for 147 fonts, out of 8000000 for 9000
  0 hyphenation exceptions out of 8191
- 74i,10n,79p,1506b,467s stack positions out of 10000i,1000n,20000p,200000b,200000s
-!  ==> Fatal error occurred, no output PDF file produced!
+ 74i,13n,79p,1505b,467s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users
+/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/GB Arial/m
+iktex/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/GB Arial/miktex/fonts
+/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/GB Arial/miktex/fonts/type1/publ
+ic/amsfonts/cm/cmmi6.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/
+cm/cmmi7.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmmi8.pfb
+><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmmib10.pfb><C:/Users
+/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/GB Arial/mi
+ktex/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/GB Arial/miktex/fonts/t
+ype1/public/amsfonts/cm/cmr6.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/a
+msfonts/cm/cmr7.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cm
+r8.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/
+Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/GB Ari
+al/miktex/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/GB Arial/miktex/fo
+nts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/GB Arial/miktex/fonts/type1/pu
+blic/amsfonts/cm/cmti10.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfon
+ts/cm/cmtt10.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmtt1
+2.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+
+Output written on report1.pdf (5 pages, 307006 bytes).
+PDF statistics:
+ 312 PDF objects out of 1000 (max. 8388607)
+ 21 named destinations out of 1000 (max. 500000)
+ 36443 words of extra memory for PDF output out of 42996 (max. 10000000)
+

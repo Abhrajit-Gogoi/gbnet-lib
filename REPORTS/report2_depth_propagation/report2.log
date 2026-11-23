@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.11.18)  18 NOV 2026 23:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.11.18)  23 NOV 2026 11:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**./REPORTS/report1_numerical_verification/report1.tex
-(REPORTS/report1_numerical_verification/report1.tex
+**./report2.tex
+(report2.tex
 LaTeX2e <2026-11-01>
 L3 programming layer <2026-09-09>
 (C:\Users\GB Arial\miktex\tex/latex/base\article.cls
@@ -223,6 +223,9 @@ File: microtype.cfg 2026/03/01 v3.2d microtype main configuration file (RS)
 )
 LaTeX Info: Redefining \microtypesetup on input line 3065.
 )
+(C:\Users\GB Arial\miktex\tex/latex/needspace\needspace.sty
+Package: needspace 2026/10/13 v1.3f reserve vertical space
+)
 (C:\Users\GB Arial\miktex\tex/latex/listings\listings.sty
 \lst@mode=\count307
 \lst@gtempboxa=\box58
@@ -391,32 +394,32 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip58
 )
-Package hyperref Info: Option `colorlinks' set `true' on input line 10.
+Package hyperref Info: Option `colorlinks' set `true' on input line 11.
 
 (C:\Users\GB Arial\miktex\tex/latex/l3kernel\l3backend-pdftex.def
 File: l3backend-pdftex.def 2026-09-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count326
-) (report1.aux)
-\openout1 = `report1.aux'.
+) (report2.aux)
+\openout1 = `report2.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
  (C:\Users\GB Arial\miktex\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count327
@@ -472,13 +475,13 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Info: Redefining \microtypecontext on input line 18.
-Package microtype Info: Applying patch `item' on input line 18.
-Package microtype Info: Applying patch `toc' on input line 18.
-Package microtype Info: Applying patch `eqnum' on input line 18.
-Package microtype Info: Applying patch `footnote' on input line 18.
-Package microtype Info: Applying patch `verbatim' on input line 18.
-LaTeX Info: Redefining \microtypesetup on input line 18.
+LaTeX Info: Redefining \microtypecontext on input line 19.
+Package microtype Info: Applying patch `item' on input line 19.
+Package microtype Info: Applying patch `toc' on input line 19.
+Package microtype Info: Applying patch `eqnum' on input line 19.
+Package microtype Info: Applying patch `footnote' on input line 19.
+Package microtype Info: Applying patch `verbatim' on input line 19.
+LaTeX Info: Redefining \microtypesetup on input line 19.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
@@ -494,13 +497,13 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 (RS)
 )
 \c@lstlisting=\count333
-Package hyperref Info: Link coloring ON on input line 18.
- (report1.out)
-(report1.out)
+Package hyperref Info: Link coloring ON on input line 19.
+ (report2.out)
+(report2.out)
 \@outlinefile=\write3
-\openout3 = `report1.out'.
+\openout3 = `report2.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 23.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 24.
 
  (C:\Users\GB Arial\miktex\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -508,7 +511,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (C:\Users\GB Arial\miktex\tex/latex/microtype\mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 23.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 24.
 
 
 (C:\Users\GB Arial\miktex\tex/latex/amsfonts\umsb.fd
@@ -519,58 +522,53 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 ) [1
 
 {C:/Users/GB Arial/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}] [2]
-<RESULTS/exp1/fig1_cfd_v_curve.pdf, id=74, 426.71419pt x 283.17558pt>
-File: RESULTS/exp1/fig1_cfd_v_curve.pdf Graphic file (type pdf)
-<use RESULTS/exp1/fig1_cfd_v_curve.pdf>
-Package pdftex.def Info: RESULTS/exp1/fig1_cfd_v_curve.pdf  used on input line 
-116.
-(pdftex.def)             Requested size: 271.7835pt x 180.36757pt.
- [3]
-<RESULTS/exp1/fig2_double_backprop_scaling.pdf, id=84, 426.35161pt x 282.05376p
-t>
-File: RESULTS/exp1/fig2_double_backprop_scaling.pdf Graphic file (type pdf)
-<use RESULTS/exp1/fig2_double_backprop_scaling.pdf>
-Package pdftex.def Info: RESULTS/exp1/fig2_double_backprop_scaling.pdf  used on
- input line 146.
-(pdftex.def)             Requested size: 271.7835pt x 179.79935pt.
- [4 <./RESULTS/exp1/fig1_cfd_v_curve.pdf> <./RESULTS/exp1/fig2_double_backprop_
-scaling.pdf>]
-[5] (report1.aux)
+<../../RESULTS/exp2/fig3_depth_decay_comparison.pdf, id=69, 725.13408pt x 287.1
+1266pt>
+File: ../../RESULTS/exp2/fig3_depth_decay_comparison.pdf Graphic file (type pdf
+)
+<use ../../RESULTS/exp2/fig3_depth_decay_comparison.pdf>
+Package pdftex.def Info: ../../RESULTS/exp2/fig3_depth_decay_comparison.pdf  us
+ed on input line 148.
+(pdftex.def)             Requested size: 452.9679pt x 179.34859pt.
+ [3] [4 <../../RESULTS/exp2/fig3_depth_decay_comparison.pdf>] [5] (report2.aux)
  ***********
 LaTeX2e <2026-11-01>
 L3 programming layer <2026-09-09>
  ***********
-Package rerunfilecheck Info: File `report1.out' has not changed.
-(rerunfilecheck)             Checksum: EB7A97EF2769A07182F4E7A24243D506;2276.
+Package rerunfilecheck Info: File `report2.out' has not changed.
+(rerunfilecheck)             Checksum: 84EFA82E8731D1A733DD34E959EBD079;1653.
  ) 
 Here is how much of TeX's memory you used:
- 14400 strings out of 469245
- 220591 string characters out of 5455597
- 699086 words of memory out of 5000000
- 43311 multiletter control sequences out of 15000+600000
- 640455 words of font info for 128 fonts, out of 8000000 for 9000
+ 14469 strings out of 469245
+ 221569 string characters out of 5455597
+ 702315 words of memory out of 5000000
+ 43336 multiletter control sequences out of 15000+600000
+ 643521 words of font info for 151 fonts, out of 8000000 for 9000
  0 hyphenation exceptions out of 8191
- 74i,10n,79p,1545b,467s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users
-/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/GB Arial/m
-iktex/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/GB Arial/miktex/fonts
-/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/GB Arial/miktex/fonts/type1/publ
-ic/amsfonts/cm/cmmi6.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/
-cm/cmmi7.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmmi8.pfb
-><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/G
-B Arial/miktex/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/GB Arial/mikt
-ex/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/GB Arial/miktex/fonts/type
-1/public/amsfonts/cm/cmr7.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsf
-onts/cm/cmr8.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmsy1
-0.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Us
-ers/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/GB Arial
-/miktex/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/GB Arial/miktex/font
-s/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/GB Arial/miktex/fonts/type1/pub
-lic/amsfonts/cm/cmtt12.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfont
-s/symbols/msbm10.pfb>
-Output written on report1.pdf (5 pages, 283420 bytes).
+ 74i,9n,79p,1698b,466s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\GB Arial\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\t
+crm1095.pk><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
+<C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/G
+B Arial/miktex/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/GB Arial/mik
+tex/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/GB Arial/miktex/fonts/t
+ype1/public/amsfonts/cm/cmmi5.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/
+amsfonts/cm/cmmi6.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/
+cmmi7.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C
+:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/GB A
+rial/miktex/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/GB Arial/miktex/
+fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/GB Arial/miktex/fonts/type1/p
+ublic/amsfonts/cm/cmr6.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfont
+s/cm/cmr7.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmr8.pfb
+><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/
+GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/GB Arial/mik
+tex/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/GB Arial/miktex/fonts/ty
+pe1/public/amsfonts/cm/cmsy8.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/a
+msfonts/cm/cmti10.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/
+cmtt10.pfb><C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+<C:/Users/GB Arial/miktex/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on report2.pdf (5 pages, 312784 bytes).
 PDF statistics:
- 298 PDF objects out of 1000 (max. 8388607)
- 21 named destinations out of 1000 (max. 500000)
- 30299 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 307 PDF objects out of 1000 (max. 8388607)
+ 23 named destinations out of 1000 (max. 500000)
+ 42566 words of extra memory for PDF output out of 42996 (max. 10000000)
 

@@ -6,14 +6,17 @@
 \usepackage{microtype}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{url}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue}
 \geometry{margin=1in}
 \lstset{basicstyle=\ttfamily\small, frame=single, breaklines=true}
 
 \title{\textbf{Numerical Verification of a Lightweight Reverse-Mode Automatic Differentiation Engine}}
-\author{GB-Net (\texttt{gb\_net\_lib}) --- Experiment 1}
-\date{\today}
+\author{GB-Net (\texttt{gb\_net\_lib}) --- Experiment 1\\[0.5em]
+\normalsize Abhrajit Gogoi\\[0.25em]
+\normalsize \href{https://github.com/Abhrajit-Gogoi}{@Abhrajit-Gogoi} \quad \href{mailto:abhrajit.gb@gmail.com}{abhrajit.gb@gmail.com}}
+\date{November 23, 2026}
 
 \begin{document}
 
@@ -69,7 +72,7 @@ For $k=2$, $M_{2,d} = d+1$; for $k=3$, $M_{3,d} = (d+1)(d+2)/2$.
 
 \section{Experimental Methodology \& Setup}
 
-All experiments run on a single-threaded CPU with NumPy \texttt{float64}; \texttt{np.random.seed(42)} for Experiment 1.
+All experiments run on a single-threaded CPU with NumPy \texttt{float64}; \texttt{np.random.seed(42)} for Experiment 1. The complete Experiment 1 benchmark script and configuration are available in the official repository at \url{https://github.com/Abhrajit-Gogoi/gbnet-lib} (see \texttt{EXPERIMENTS/exp1\_numerical\_verification/} in the workspace).
 
 \textbf{Reference MLP (Part 1A):} input $x=[0.4,-0.3,0.8]^\top \in \mathbb{R}^{3\times 1}$; hidden layer of 4 neurons (sigmoid), output layer of 3 neurons (softmax) with cross-entropy loss against one-hot target $y=[0,1,0]^\top$; weights and biases $\sim\mathcal{U}(-0.5,0.5)$. Thirty-four scalar parameters are perturbed ($68$ forward passes per $h$).
 
@@ -165,5 +168,16 @@ Depth $d$ & Node & $M_{2,d}$ (emp.) & Theory & $M_{3,d}$ (emp.) & Theory \\
 Experiment 1 demonstrates that \texttt{gb\_net\_lib}'s VJP rules are numerically correct: analytical gradients match CFD to $\sim 10^{-10}$ relative error at $h=10^{-6}$, and the CFD sweep exhibits the expected $\mathcal{O}(h^2)$/roundoff transition. The primary architectural defect is in \texttt{bp.backprop()}: resetting only the root gradient causes stale gradients to compound combinatorially ($\binom{k+d-1}{d}$) under graph reuse. A node $d$ edges from the loss is multiplied by $d+1$ on a second pass ($\times 8$ on $W^{(1)}$ at depth 7), which would silently corrupt any training loop reusing a graph.
 
 \texttt{net.train()} escapes this only incidentally: \texttt{feed()} allocates new intermediate \texttt{bp} objects each iteration and the loop zeroes \texttt{w.grad}/\texttt{b.grad} after every sample. The robust, general fix is a two-line addition inside \texttt{backprop()} --- clearing \texttt{.grad} for every node in the topological order before seeding the root --- which restores $M_{k,d}=1.00$ and makes repeated backward passes idempotent.
+
+\section*{References}
+
+\noindent
+\textbf{Software Repository:} Abhrajit Gogoi, \textit{gbnet-lib: Lightweight NumPy Reverse-Mode Automatic Differentiation and MLP Library}, GitHub repository, 2026. URL: \url{https://github.com/Abhrajit-Gogoi/gbnet-lib}
+
+\noindent
+\textbf{Automatic Differentiation:} Atılım Güneş Baydin, Barak A. Pearlmutter, Alexey Andreyevich Radul, and Jeffrey Mark Siskind, ``Automatic Differentiation in Machine Learning: a Survey,'' \textit{Journal of Machine Learning Research}, vol. 18, no. 153, pp. 1--43, 2018.
+
+\noindent
+\textbf{Finite-Difference Numerical Verification:} Jorge Nocedal and Stephen J. Wright, \textit{Numerical Optimization}, 2nd ed., Springer, 2006 (Chapter 8: Derivative-Free and Finite-Difference Derivative Approximations).
 
 \end{document}

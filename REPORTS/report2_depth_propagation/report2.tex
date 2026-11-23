@@ -7,14 +7,17 @@
 \usepackage{needspace}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{url}
 \usepackage{hyperref}
 \hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue}
 \geometry{margin=1in}
 \lstset{basicstyle=\ttfamily\small, frame=single, breaklines=true}
 
 \title{\textbf{Empirical Analysis of Gradient Propagation Dynamics Across Varying Network Depths in GB-Net}}
-\author{GB-Net (\texttt{gb\_net\_lib}) --- Experiment 2}
-\date{\today}
+\author{GB-Net (\texttt{gb\_net\_lib}) --- Experiment 2\\[0.5em]
+\normalsize Abhrajit Gogoi\\[0.25em]
+\normalsize \href{https://github.com/Abhrajit-Gogoi}{@Abhrajit-Gogoi} \quad \href{mailto:abhrajit.gb@gmail.com}{abhrajit.gb@gmail.com}}
+\date{November 23, 2026}
 
 \begin{document}
 
@@ -190,5 +193,16 @@ Concrete recommendations:
 \end{enumerate}
 
 The single-pass, no-training design keeps runtime well under the sub-second budget while isolating the structural Jacobian behavior at initialization.
+
+\section*{References}
+
+\noindent
+\textbf{Software Repository:} Abhrajit Gogoi, \textit{gbnet-lib: Lightweight NumPy Reverse-Mode Automatic Differentiation and MLP Library}, GitHub repository, 2026. URL: \url{https://github.com/Abhrajit-Gogoi/gbnet-lib}
+
+\noindent
+\textbf{He Initialization:} Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun, ``Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification,'' in \textit{Proceedings of the IEEE International Conference on Computer Vision (ICCV)}, pp. 1026--1034, 2015.
+
+\noindent
+\textbf{Xavier / Glorot Initialization:} Xavier Glorot and Yoshua Bengio, ``Understanding the difficulty of training deep feedforward neural networks,'' in \textit{Proceedings of the Thirteenth International Conference on Artificial Intelligence and Statistics (AISTATS)}, PMLR 9, pp. 249--256, 2010.
 
 \end{document}

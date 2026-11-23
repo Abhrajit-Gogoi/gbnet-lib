@@ -212,4 +212,4 @@ To verify that `gb-net` actually gets the math right under the hood—and to see
 ## Citation
 
 * **Experiment 1:** Gogoi, A. (2026). *Numerical Verification of a Lightweight Reverse-Mode Automatic Differentiation Engine*. Zenodo. https://doi.org/10.5281/zenodo.24471739
-* **Experiment 2:** Gogoi, A. (2026). *Empirical Analysis of Gradient Propagation Dynamics Across Varying Network Depths in GB-Net*. Zenodo. https://doi.org/10.5281/zenodo.<REPORT_2_ID>
+* **Experiment 2:** Gogoi, A. (2026). *Empirical Analysis of Gradient Propagation Dynamics Across Varying Network Depths in GB-Net*. Zenodo. https://doi.org/10.5281/zenodo.24475887
